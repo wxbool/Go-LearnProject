@@ -21,6 +21,7 @@ type ClickCfg struct {
 	Coordinate []*Coordinate //点击坐标点切片
 	StartWait int //任务开始前等待时间（秒s）
 	ClickWait int //多个坐标点点击间隔时间（毫秒ms），1000ms = 1s
+	Loops int //任务执行循环次数
 }
 
 
@@ -67,6 +68,7 @@ func readConfig(cfg string) *ClickCfg {
 		clickCfg := &ClickCfg{}
 		clickCfg.StartWait = c.GetIntMust("task.startwait" , 0)
 		clickCfg.ClickWait = c.GetIntMust("task.clickwait" , 0)
+		clickCfg.Loops = c.GetIntMust("task.loops" , 1)
 
 		//获取坐标列表
 		coordinate := c.GetMust("task.coordinate" , "")

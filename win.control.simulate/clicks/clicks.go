@@ -24,7 +24,12 @@ func main() {
 
 	app := appclick.NewApp(CONFIG)
 
-	app.Run()
+	loop := 0 //任务执行次数
+	for loop < app.Loops {
+		app.Run()
+
+		loop++
+	}
 
 	fmt.Println("finish .")
 
