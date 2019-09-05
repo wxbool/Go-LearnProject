@@ -22,6 +22,7 @@ type ClickCfg struct {
 	StartWait int //任务开始前等待时间（秒s）
 	ClickWait int //多个坐标点点击间隔时间（毫秒ms），1000ms = 1s
 	Loops int //任务执行循环次数
+	Mouse bool //是否模拟鼠标移动过程（true/false）
 }
 
 
@@ -46,10 +47,15 @@ func (app *ClickCfg) Run() {
 		//执行次数
 		index := 0
 		for index < item.Nums {
-			//移动到目标坐标
-			robotgo.MoveMouseSmooth(item.X , item.Y)
-			//鼠标点击
-			robotgo.MouseClick(item.Click  , item.Dbclick)
+			if app.Mouse { //模拟鼠标移动
+				//移动到目标坐标
+				robotgo.MoveMouseSmooth(item.X , item.Y)
+				//鼠标点击
+				robotgo.MouseClick(item.Click  , item.Dbclick)
+			} else {
+				//移动到目标位置，并点击
+				robotgo.MoveClick(item.X , item.Y , item.Click , item.Dbclick)
+			}
 
 			//执行后间隔等待
 			time.Sleep(time.Millisecond * time.Duration(app.ClickWait))
@@ -69,6 +75,7 @@ func readConfig(cfg string) *ClickCfg {
 		clickCfg.StartWait = c.GetIntMust("task.startwait" , 0)
 		clickCfg.ClickWait = c.GetIntMust("task.clickwait" , 0)
 		clickCfg.Loops = c.GetIntMust("task.loops" , 1)
+		clickCfg.Mouse = c.GetBoolMust("task.mouse" , true)
 
 		//获取坐标列表
 		coordinate := c.GetMust("task.coordinate" , "")
